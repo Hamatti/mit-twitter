@@ -55,6 +55,19 @@ def get_frequency_table(raw_tweets):
 				freqs[word] += 1
 	return freqs
 
+def write_all_words_to_file(fname):
+	textfile = open(fname, 'w+')
+	for interval, tweet in cleaned_tweets.iteritems():
+		for ls in tweet:
+			for word in ls:
+				textfile.write("%s " % word)
+
+def write_freq_to_csv(fname):
+	output_file = open(fname, 'w+')
+	for word,freq in sorted_freq:
+		output_file.write('%s,%s\n' % (word, freq))
+
+
 DATABASE = 'mit.db'
 INTERVAL = 3600
 STOPWORDS = get_stopwords()
@@ -65,9 +78,6 @@ all_tweets = get_tweets(cursor)
 tweets_by_interval = get_tweets_by_intervals(all_tweets)
 cleaned_tweets = clean_tweets(tweets_by_interval)
 frequencies = get_frequency_table(cleaned_tweets)
-
 sorted_freq = sorted(frequencies.iteritems(), key=operator.itemgetter(1))
-output_file = open('frequencies.txt', 'w+')
-for word,freq in sorted_freq:
-	output_file.write('%s,%s\n' % (word, freq))
 
+write_freq_to_csv('frequencies.txt')
