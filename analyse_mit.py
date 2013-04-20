@@ -12,12 +12,16 @@ def get_stopwords():
 
 def get_tweets(cursor):
 	tweets = []
-	query_results = cursor.execute('SELECT user FROM tweets WHERE user NOT LIKE "%free%"').fetchall()
+	# Database was created with user and tweet columns as opposites, therefore we get user column instead of tweet
+	query_results = cursor.execute('SELECT user FROM tweets WHERE user NOT LIKE "%free%" AND user NOT LIKE "%pengikut%"').fetchall()
 	for res in query_results:
 		if 'chair' in res[0]:
 			continue
-		tweets.append(res[0].replace('\n', '').replace('.', '').replace(':', '').replace(',', '').replace('"', '').replace('?','').replace('!', '').replace('(', '').replace(')', '').replace("'", "").strip())
+		tweets.append(clean_words(res[0]))
 	return tweets
+
+def clean_words(words):
+	return words.replace('\n', '').replace('.', '').replace(':', '').replace(',', '').replace('"', '').replace('?','').replace('!', '').replace('(', '').replace(')', '').replace("'", "").strip()
 
 def get_tweets_by_intervals(tweets):
 	tweets_by_interval = dict()
