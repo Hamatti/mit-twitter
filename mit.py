@@ -38,4 +38,3 @@ while True:
     time.sleep(15)
 
 c.close()
-
